@@ -1,0 +1,368 @@
+[training@localhost ~]$ mkdir kranthi
+[training@localhost ~]$ ls
+aditya     Downloads  lib      Pictures  src                 Videos
+Desktop    eclipse    Music    Public    Templates           workspace
+Documents  kranthi    new_dir  scripts   training_materials
+[training@localhost ~]$ cd kranthi
+[training@localhost kranthi]$ touch kumar.txt
+[training@localhost kranthi]$ ls
+kumar.txt
+[training@localhost kranthi]$ vi kumar.txt
+[training@localhost kranthi]$ cat kumar.txt
+hadoop Distributed File System
+hdfs
+
+[training@localhost kranthi]$ pwd
+/home/training/kranthi
+[training@localhost kranthi]$ hdfs dfs -mkdir source
+mkdir: `source': File exists
+[training@localhost kranthi]$ hdfs dfs -mkdir source1
+[training@localhost kranthi]$ ls
+kumar.txt
+[training@localhost kranthi]$ haddop fs -ls
+bash: haddop: command not found
+[training@localhost kranthi]$ hadoop fs -ls
+Found 3 items
+drwxr-xr-x   - training supergroup          0 2023-01-23 05:58 dest
+drwxr-xr-x   - training supergroup          0 2023-01-23 05:55 source
+drwxr-xr-x   - training supergroup          0 2023-01-23 06:20 source1
+[training@localhost kranthi]$ ls
+kumar.txt
+[training@localhost kranthi]$ vi kumar.txt
+[training@localhost kranthi]$ cat kumar.txt
+hadoop Distributed File System
+hdfs
+
+[training@localhost kranthi]$ hadoop fs -copyFromLocal kumar.txt
+[training@localhost kranthi]$ ls
+kumar.txt
+[training@localhost kranthi]$ cd..
+bash: cd..: command not found
+[training@localhost kranthi]$ cd ..
+[training@localhost ~]$ cd kranthi
+[training@localhost kranthi]$ hadoop fs -cat kumar.txt
+hadoop Distributed File System
+hdfs
+
+[training@localhost kranthi]$ ls -l
+total 4
+-rw-rw-r-- 1 training training 37 Jan 23 06:22 kumar.txt
+[training@localhost kranthi]$ mkdir fromHdoop
+[training@localhost kranthi]$ chmod fromHdoop/
+chmod: missing operand after `fromHdoop/'
+Try `chmod --help' for more information.
+[training@localhost kranthi]$ chmod 777 fromHdoop/
+[training@localhost kranthi]$ hadoop fs -ls
+Found 4 items
+drwxr-xr-x   - training supergroup          0 2023-01-23 05:58 dest
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:23 kumar.txt
+drwxr-xr-x   - training supergroup          0 2023-01-23 05:55 source
+drwxr-xr-x   - training supergroup          0 2023-01-23 06:20 source1
+[training@localhost kranthi]$ hadoop fs -ls dest
+[training@localhost kranthi]$ hadoop fs -ls source
+[training@localhost kranthi]$ hadoop fs -ls source1
+[training@localhost kranthi]$ ls -
+ls: cannot access -: No such file or directory
+[training@localhost kranthi]$ ls -l
+total 8
+drwxrwxrwx 2 training training 4096 Jan 23 06:34 fromHdoop
+-rw-rw-r-- 1 training training   37 Jan 23 06:22 kumar.txt
+[training@localhost kranthi]$ cat kumar.txt 
+hadoop Distributed File System
+hdfs
+
+[training@localhost kranthi]$ hadoop fs -copyFromLocal kumar.txt source
+[training@localhost kranthi]$ hadoop fs -ls source
+Found 1 items
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:36 source/kumar.txt
+[training@localhost kranthi]$ hadoop fs -cat source/kumar.txt
+hadoop Distributed File System
+hdfs
+
+[training@localhost kranthi]$ hadoop fs -ls dest
+[training@localhost kranthi]$ hadoop fs -cp source/kumar.txt dest
+[training@localhost kranthi]$ hadoop fs -ls dest
+Found 1 items
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:37 dest/kumar.txt
+[training@localhost kranthi]$ hadoop fs -copyToLocal dest/kumar.txt fromHdoop
+[training@localhost kranthi]$ cd fromHdoop/
+[training@localhost fromHdoop]$ ls
+kumar.txt
+[training@localhost fromHdoop]$ hadoop fs -df
+Filesystem                  Size    Used    Available  Use%
+hdfs://0.0.0.0:8020  15118729216  135264  10282356736    0%
+[training@localhost fromHdoop]$ hadoop fs -du
+37  dest
+37  kumar.txt
+37  source
+0   source1
+[training@localhost fromHdoop]$ hadoop fs -help
+Usage: hadoop fs [generic options]
+	[-cat [-ignoreCrc] <src> ...]
+	[-chgrp [-R] GROUP PATH...]
+	[-chmod [-R] <MODE[,MODE]... | OCTALMODE> PATH...]
+	[-chown [-R] [OWNER][:[GROUP]] PATH...]
+	[-copyFromLocal <localsrc> ... <dst>]
+	[-copyToLocal [-ignoreCrc] [-crc] <src> ... <localdst>]
+	[-count [-q] <path> ...]
+	[-cp <src> ... <dst>]
+	[-df [-h] [<path> ...]]
+	[-du [-s] [-h] <path> ...]
+	[-expunge]
+	[-get [-ignoreCrc] [-crc] <src> ... <localdst>]
+	[-getmerge [-nl] <src> <localdst>]
+	[-help [cmd ...]]
+	[-ls [-d] [-h] [-R] [<path> ...]]
+	[-mkdir [-p] <path> ...]
+	[-moveFromLocal <localsrc> ... <dst>]
+	[-moveToLocal <src> <localdst>]
+	[-mv <src> ... <dst>]
+	[-put <localsrc> ... <dst>]
+	[-rm [-f] [-r|-R] [-skipTrash] <src> ...]
+	[-rmdir [--ignore-fail-on-non-empty] <dir> ...]
+	[-setrep [-R] [-w] <rep> <path/file> ...]
+	[-stat [format] <path> ...]
+	[-tail [-f] <file>]
+	[-test -[ezd] <path>]
+	[-text [-ignoreCrc] <src> ...]
+	[-touchz <path> ...]
+	[-usage [cmd ...]]
+
+-cat [-ignoreCrc] <src> ...:	Fetch all files that match the file pattern <src> 
+		and display their content on stdout.
+
+-chgrp [-R] GROUP PATH...:	This is equivalent to -chown ... :GROUP ...
+
+-chmod [-R] <MODE[,MODE]... | OCTALMODE> PATH...:	Changes permissions of a file.
+			This works similar to shell's chmod with a few exceptions.
+		
+		-R	modifies the files recursively. This is the only option
+			currently supported.
+		
+		MODE	Mode is same as mode used for chmod shell command.
+			Only letters recognized are 'rwxXt'. E.g. +t,a+r,g-w,+rwx,o=r
+		
+		OCTALMODE Mode specifed in 3 or 4 digits. If 4 digits, the first may
+		be 1 or 0 to turn the sticky bit on or off, respectively.  Unlike shell command, it is not possible to specify only part of the mode
+			E.g. 754 is same as u=rwx,g=rx,o=r
+		
+			If none of 'augo' is specified, 'a' is assumed and unlike
+			shell command, no umask is applied.
+
+-chown [-R] [OWNER][:[GROUP]] PATH...:	Changes owner and group of a file.
+			This is similar to shell's chown with a few exceptions.
+		
+			-R	modifies the files recursively. This is the only option
+			currently supported.
+		
+			If only owner or group is specified then only owner or
+			group is modified.
+		
+			The owner and group names may only cosists of digits, alphabet,
+			and any of '-_.@/' i.e. [-_.@/a-zA-Z0-9]. The names are case
+			sensitive.
+		
+			WARNING: Avoid using '.' to separate user name and group though
+			Linux allows it. If user names have dots in them and you are
+			using local file system, you might see surprising results since
+			shell command 'chown' is used for local files.
+
+-copyFromLocal <localsrc> ... <dst>:	Identical to the -put command.
+
+-copyToLocal [-ignoreCrc] [-crc] <src> ... <localdst>:	Identical to the -get command.
+
+-count [-q] <path> ...:	Count the number of directories, files and bytes under the paths
+		that match the specified file pattern.  The output columns are:
+		DIR_COUNT FILE_COUNT CONTENT_SIZE FILE_NAME or
+		QUOTA REMAINING_QUATA SPACE_QUOTA REMAINING_SPACE_QUOTA 
+		      DIR_COUNT FILE_COUNT CONTENT_SIZE FILE_NAME
+
+-cp <src> ... <dst>:	Copy files that match the file pattern <src> to a
+		destination.  When copying multiple files, the destination
+		must be a directory.
+
+-df [-h] [<path> ...]:	Shows the capacity, free and used space of the filesystem.
+		If the filesystem has multiple partitions, and no path to a
+		particular partition is specified, then the status of the root
+		partitions will be shown.
+		  -h   Formats the sizes of files in a human-readable fashion
+		       rather than a number of bytes.
+
+-du [-s] [-h] <path> ...:	Show the amount of space, in bytes, used by the files that
+		match the specified file pattern. The following flags are optional:
+		  -s   Rather than showing the size of each individual file that
+		       matches the pattern, shows the total (summary) size.
+		  -h   Formats the sizes of files in a human-readable fashion
+		       rather than a number of bytes.
+		
+		Note that, even without the -s option, this only shows size summaries
+		one level deep into a directory.
+		The output is in the form 
+			size	name(full path)
+
+-expunge:	Empty the Trash
+
+-get [-ignoreCrc] [-crc] <src> ... <localdst>:	Copy files that match the file pattern <src>
+		to the local name.  <src> is kept.  When copying multiple,
+		files, the destination must be a directory.
+
+-getmerge [-nl] <src> <localdst>:	Get all the files in the directories that
+		match the source file pattern and merge and sort them to only
+		one file on local fs. <src> is kept.
+		  -nl   Add a newline character at the end of each file.
+
+-help [cmd ...]:	Displays help for given command or all commands if none
+		is specified.
+
+-ls [-d] [-h] [-R] [<path> ...]:	List the contents that match the specified file pattern. If
+		path is not specified, the contents of /user/<currentUser>
+		will be listed. Directory entries are of the form 
+			dirName (full path) <dir> 
+		and file entries are of the form 
+			fileName(full path) <r n> size 
+		where n is the number of replicas specified for the file 
+		and size is the size of the file, in bytes.
+		  -d  Directories are listed as plain files.
+		  -h  Formats the sizes of files in a human-readable fashion
+		      rather than a number of bytes.
+		  -R  Recursively list the contents of directories.
+
+-mkdir [-p] <path> ...:	Create a directory in specified location.
+		  -p  Do not fail if the directory already exists
+
+-moveFromLocal <localsrc> ... <dst>:	Same as -put, except that the source is
+		deleted after it's copied.
+
+-moveToLocal <src> <localdst>:	Not implemented yet
+
+-mv <src> ... <dst>:	Move files that match the specified file pattern <src>
+		to a destination <dst>.  When moving multiple files, the
+		destination must be a directory.
+
+-put <localsrc> ... <dst>:	Copy files from the local file system
+		into fs.
+
+-rm [-f] [-r|-R] [-skipTrash] <src> ...:	Delete all files that match the specified file pattern.
+		Equivalent to the Unix command "rm <src>"
+		-skipTrash option bypasses trash, if enabled, and immediately
+		deletes <src>
+		  -f     If the file does not exist, do not display a diagnostic
+		         message or modify the exit status to reflect an error.
+		  -[rR]  Recursively deletes directories
+
+-rmdir [--ignore-fail-on-non-empty] <dir> ...:	Removes the directory entry specified by each directory argument,
+		provided it is empty.
+
+-setrep [-R] [-w] <rep> <path/file> ...:	Set the replication level of a file.
+		The -R flag requests a recursive change of replication level
+		for an entire tree.
+
+-stat [format] <path> ...:	Print statistics about the file/directory at <path>
+		in the specified format. Format accepts filesize in blocks (%b), group name of owner(%g),
+		filename (%n), block size (%o), replication (%r), user name of owner(%u), modification date (%y, %Y)
+
+-tail [-f] <file>:	Show the last 1KB of the file.
+				The -f option shows appended data as the file grows.
+
+-test -[ezd] <path>:	If file exists, has zero length, is a directory
+		then return 0, else return 1.
+
+-text [-ignoreCrc] <src> ...:	Takes a source file and outputs the file in text format.
+		The allowed formats are zip and TextRecordInputStream.
+
+-touchz <path> ...:	Creates a file of zero length
+		at <path> with current time as the timestamp of that <path>.
+		An error is returned if the file exists with non-zero length
+
+-usage [cmd ...]:	Displays the usage for given command or all commands if none
+		is specified.
+
+Generic options supported are
+-conf <configuration file>     specify an application configuration file
+-D <property=value>            use value for given property
+-fs <local|namenode:port>      specify a namenode
+-jt <local|jobtracker:port>    specify a job tracker
+-files <comma separated list of files>    specify comma separated files to be copied to the map reduce cluster
+-libjars <comma separated list of jars>    specify comma separated jar files to include in the classpath.
+-archives <comma separated list of archives>    specify comma separated archives to be unarchived on the compute machines.
+
+The general command line syntax is
+bin/hadoop command [genericOptions] [commandOptions]
+
+[training@localhost fromHdoop]$ hadoop fs -rm source1/kumar.txt
+rm: `source1/kumar.txt': No such file or directory
+[training@localhost fromHdoop]$ hadoop fs -rm source/kumar.txt
+Deleted source/kumar.txt
+[training@localhost fromHdoop]$ ls
+kumar.txt
+[training@localhost fromHdoop]$ hadoop fs -ls
+Found 4 items
+drwxr-xr-x   - training supergroup          0 2023-01-23 06:37 dest
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:23 kumar.txt
+drwxr-xr-x   - training supergroup          0 2023-01-23 06:43 source
+drwxr-xr-x   - training supergroup          0 2023-01-23 06:20 source1
+[training@localhost fromHdoop]$ cd ..
+[training@localhost kranthi]$ ls
+fromHdoop  kumar.txt
+[training@localhost kranthi]$ touch kumar1.txt
+[training@localhost kranthi]$ vi touch kumar1.txt 
+2 files to edit
+[training@localhost kranthi]$ cat kumar1.txt
+[training@localhost kranthi]$ vi  kumar1.txt 
+[training@localhost kranthi]$ cat kumar1.txt
+nagaraju teaches hadoop commands
+commands
+
+[training@localhost kranthi]$ hadoop fs -copyFromLocal kumar1.txt source
+[training@localhost kranthi]$ hadoop fs -ls source
+Found 1 items
+-rw-r--r--   1 training supergroup         43 2023-01-23 07:05 source/kumar1.txt
+[training@localhost kranthi]$ hadoop fs -ls source1
+[training@localhost kranthi]$ hadoop fs -ls dest
+Found 1 items
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:37 dest/kumar.txt
+[training@localhost kranthi]$ hadoop fs -copyFromLocal kumar1.txt source1
+[training@localhost kranthi]$ hadoop fs -copyFromLocal kumar1.txt source1
+copyFromLocal: `source1/kumar1.txt': File exists
+[training@localhost kranthi]$ hadoop fs -ls source1
+Found 1 items
+-rw-r--r--   1 training supergroup         43 2023-01-23 07:09 source1/kumar1.txt
+[training@localhost kranthi]$ hadoop fs -copyFromLocal kumar1.txt dest
+[training@localhost kranthi]$ hadoop fs -ls dest
+Found 2 items
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:37 dest/kumar.txt
+-rw-r--r--   1 training supergroup         43 2023-01-23 07:10 dest/kumar1.txt
+[training@localhost kranthi]$ hadoop fs -getmerge dest fromhdoop mergedfile.txt
+getmerge: `fromhdoop': No such file or directory
+[training@localhost kranthi]$ hadoop fs -getmerge dest fromhadoop mergedfile.txt
+getmerge: `fromhadoop': No such file or directory
+[training@localhost kranthi]$ hadoop fs -getmerge dest source  mergedfile.txt
+[training@localhost kranthi]$ cat source mergedfile.txt
+cat: source: No such file or directory
+hadoop Distributed File System
+hdfs
+
+nagaraju teaches hadoop commands
+commands
+
+nagaraju teaches hadoop commands
+commands
+
+[training@localhost kranthi]$ hadoop fs -ls dest
+Found 2 items
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:37 dest/kumar.txt
+-rw-r--r--   1 training supergroup         43 2023-01-23 07:10 dest/kumar1.txt
+[training@localhost kranthi]$ hadoop fs -ls source
+Found 1 items
+-rw-r--r--   1 training supergroup         43 2023-01-23 07:05 source/kumar1.txt
+[training@localhost kranthi]$ hadoop fs -ls source1
+Found 1 items
+-rw-r--r--   1 training supergroup         43 2023-01-23 07:09 source1/kumar1.txt
+[training@localhost kranthi]$ hadoop fs -ls
+Found 4 items
+drwxr-xr-x   - training supergroup          0 2023-01-23 07:10 dest
+-rw-r--r--   1 training supergroup         37 2023-01-23 06:23 kumar.txt
+drwxr-xr-x   - training supergroup          0 2023-01-23 07:05 source
+drwxr-xr-x   - training supergroup          0 2023-01-23 07:09 source1
+[training@localhost kranthi]$ ^C
+[training@localhost kranthi]$ 
